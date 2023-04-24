@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { locations } from './data.js';
+import { locations } from './sampleData/data.js';
 
 const monthList =
   ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"]
