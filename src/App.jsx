@@ -50,13 +50,30 @@ const App = () => {
     }
   }
   );
-  console.log(filteredLocations);
+
+  function Circle({ value }) {
+    const circleStyle = {
+      10: {backgroundColor: 'white',
+      border: '1px solid white'},
+      20: {backgroundColor: 'white',
+      border: '1px solid #038cfc'},
+      30: {backgroundColor: '#038cfc',
+        border: '1px solid #038cfc'}
+    }
+
+    return<div style={{
+      height: '8px',
+      width: '8px',
+      borderRadius: '50%',
+      ...circleStyle[value]
+    }}></div>
+  }
 
   const filteredAnimals = new Set();
   filteredLocations.forEach((({ animal_list }) => {
     animal_list.forEach((animal) => {
       (selectedMonth ? animal.monthly_sighting[selectedMonth] > 10 && filteredAnimals.add(animal.name)
-      : filteredAnimals.add(animal.name));
+        : filteredAnimals.add(animal.name));
     });
   }))
 
@@ -65,7 +82,7 @@ const App = () => {
   const animalFilterDisabledList = Array(allAnimals.length).fill(false);
   allAnimals.forEach((animal, index) => {
     animalFilterDisabledList[index] =
-    filteredAnimals.has(animal) ? false : true
+      filteredAnimals.has(animal) ? false : true
   })
 
   // if (selectedMonth === '') {
@@ -80,19 +97,22 @@ const App = () => {
     <div>
       <div>
         {monthList.map((month, index) => (
-          <label key={month}>
-            <input
-              type="radio"
-              name="month"
-              value={month}
-              checked={selectedMonth === month}
-              onChange={handleMonthChange}
+          <div className="form-check form-check-inline">
+              <input
+              className="form-check-input"
+                type="radio"
+                name="month"
+                value={month}
+                checked={selectedMonth === month}
+                onChange={handleMonthChange}
               // disabled={monthFilterDisabledList[index]}
-            />
-            {month}
-          </label>
+              />
+            <label key={month}>
+              {month}
+            </label>
+            </div>
         ))}
-        <button onClick={handleResetMonthFilter}>Reset Month Filter</button>
+        <button type="button" className="btn btn-secondary" onClick={handleResetMonthFilter}>Reset Month Filter</button>
       </div>
       <div>
         {allAnimals.map((animal, index) => (
@@ -113,28 +133,41 @@ const App = () => {
         {filteredLocations.map((location) => (
           <div key={location.location_id}>
             <h2>{location.name}</h2>
-            {location.animal_list
-              .filter((animal) => {
-                if (!selectedMonth) {
-                  return true;
-                } else {
-                  return animal.monthly_sighting[selectedMonth] > 10;
-                }
-              })
-              .filter((animal) => checkedAnimals.length === 0 || checkedAnimals.includes(animal.name))
-              .map((animal) => (
-                <div key={animal.name}>
-                  <h3>{animal.name}</h3>
-                  <ul>
+
+            <div className="table-responsive">
+              <thead>
+                <tr>
+                  <th scope='col'>Name</th>
+                  {selectedMonth === '' ?
+                    monthList.map(month =>
+                      <th scope='col'>{`${month.slice(0, 3)}`}</th>
+                    )
+                    : <th scope='col'>{`${selectedMonth.slice(0, 3)}`}</th>
+                  }
+                </tr>
+              </thead>
+              {location.animal_list
+                .filter((animal) => {
+                  if (!selectedMonth) {
+                    return true;
+                  } else {
+                    return animal.monthly_sighting[selectedMonth] > 10;
+                  }
+                })
+                .filter((animal) => checkedAnimals.length === 0 || checkedAnimals.includes(animal.name))
+                .map((animal) => (
+                  <tbody>
+                    <th scope="row">{animal.name}</th>
                     {selectedMonth === '' ?
                       monthList.map(month =>
-                        <li>{`${month}: ${animal.monthly_sighting[month]}`}</li>
+                        <td><Circle value={animal.monthly_sighting[month]} /></td>
                       )
-                      : <li>{`${selectedMonth}: ${animal.monthly_sighting[selectedMonth]}`}</li>
+                      : <td><Circle value={animal.monthly_sighting[selectedMonth]} /></td>
                     }
-                  </ul>
-                </div>
-              ))}
+                  </tbody>
+                ))
+              }
+            </div>
           </div>
         ))}
       </div>
