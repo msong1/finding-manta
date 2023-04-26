@@ -100,7 +100,7 @@ const App = () => {
   // }
 
   return (
-    <div className="row">
+    <div className="row p-2">
       <aside className="col-md-3 col-l-4 col-xl-4 col-xxl-3">
         <div>
           {monthList.map((month, index) => (
@@ -137,47 +137,64 @@ const App = () => {
           <button onClick={handleResetAnimalFilter}>Reset Animal Filter</button>
         </div>
       </aside>
-      <div className="col-md-9 col-l-8 col-xl-8 col-xxl-9">
-        {filteredLocations.map((location) => (
-          <div key={location.location_id}>
-            <h2>{location.name}</h2>
+      <div className="col-md-9 col-lg-8 col-xl-8 col-xxl-9">
+        <div className="vstack gap-4">
 
-            <div className="table-responsive">
-              <thead>
-                <tr>
-                  <th scope='col'>Name</th>
-                  {selectedMonth === '' ?
-                    monthList.map(month =>
-                      <th scope='col'>{`${month.slice(0, 3)}`}</th>
-                    )
-                    : <th scope='col'>{`${selectedMonth.slice(0, 3)}`}</th>
-                  }
-                </tr>
-              </thead>
-              {location.animal_list
-                .filter((animal) => {
-                  if (!selectedMonth) {
-                    return true;
-                  } else {
-                    return animal.monthly_sighting[selectedMonth] > 10;
-                  }
-                })
-                .filter((animal) => checkedAnimals.length === 0 || checkedAnimals.includes(animal.name))
-                .map((animal) => (
-                  <tbody>
-                    <th scope="row">{animal.name}</th>
-                    {selectedMonth === '' ?
-                      monthList.map(month =>
-                        <td><Circle value={animal.monthly_sighting[month]} /></td>
-                      )
-                      : <td><Circle value={animal.monthly_sighting[selectedMonth]} /></td>
-                    }
-                  </tbody>
-                ))
-              }
-            </div>
-          </div>
-        ))}
+          {filteredLocations.map((location) => (
+            <>
+              <div className="card shadow p-2">
+                <div className="row g-0">
+                  <div className="col-md-3 position-relative">
+                    <img className="img-fluid" src={location.thumbnail} />
+                  </div>
+                  <div className="col-md-9 col-lg-9" key={location.location_id} >
+                    <h2>{location.name}</h2>
+                    <table className="table-responsive" style={{  maxHeight:"200px",
+    overflowY:"scroll",
+    display: "block"
+}}>
+                      <thead>
+                        <tr >
+                          <th scope='col'>Name</th>
+                          {selectedMonth === '' ?
+                            monthList.map(month =>
+                              <th col-xxl-1 scope='col'>{`${month.slice(0, 3)}`}</th>
+                            )
+                            : <th scope='col'>{`${selectedMonth.slice(0, 3)}`}</th>
+                          }
+                        </tr>
+                      </thead>
+                      {/* <div style={{height:'200px', overflowY:'scroll'}}> */}
+                      {location.animal_list
+                        .filter((animal) => {
+                          if (!selectedMonth) {
+                            return true;
+                          } else {
+                            return animal.monthly_sighting[selectedMonth] > 10;
+                          }
+                        })
+                        .filter((animal) => checkedAnimals.length === 0 || checkedAnimals.includes(animal.name))
+                        .map((animal) => (
+                          <tbody>
+                            <th scope="row">{animal.name}</th>
+                            {selectedMonth === '' ?
+                              monthList.map(month =>
+                                <td><Circle value={animal.monthly_sighting[month]} /></td>
+                              )
+                              : <td><Circle value={animal.monthly_sighting[selectedMonth]} /></td>
+                            }
+                          </tbody>
+                        ))
+                      }
+                      {/* </div> */}
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </>
+          ))}
+
+        </div>
       </div>
     </div>
   );
