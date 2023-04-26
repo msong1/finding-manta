@@ -67,7 +67,7 @@ const App = () => {
       }
     }
 
-    return <div style={{
+    return <div className="position-absolute top-50 start-50 translate-middle" style={{
       height: '8px',
       width: '8px',
       borderRadius: '50%',
@@ -91,17 +91,13 @@ const App = () => {
       filteredAnimals.has(animal) ? false : true
   })
 
-  // if (selectedMonth === '') {
-  //   const monthFilterDisabledList = Array(monthList.length).fill(false);
-  //   filteredLocations
-
-  // } else {
-  //   const monthFilterDisabledList = Array(monthList.length).fill(false);
-  // }
+  const prettyMonth = (month) => {
+    return `${month[0].toUpperCase()+month.slice(1,3)}`
+  }
 
   return (
     <div className="row p-2">
-      <aside className="col-md-3 col-l-4 col-xl-4 col-xxl-3">
+      <aside className="col-sm-12 col-md-3 col-l-4 col-xl-2 col-xxl-2" style={{minWidth:"210px", maxWidth:"230px"}}>
         <div>
           {monthList.map((month, index) => (
             <div className="form-check form-check-inline">
@@ -115,26 +111,30 @@ const App = () => {
               // disabled={monthFilterDisabledList[index]}
               />
               <label key={month}>
-                {month}
+                {prettyMonth(month)}
               </label>
             </div>
           ))}
-          <button type="button" className="btn btn-secondary" onClick={handleResetMonthFilter}>Reset Month Filter</button>
+          <button type="button" className="btn btn-secondary" onClick={handleResetMonthFilter}>Reset</button>
         </div>
-        <div>
+        <div className="form-check">
           {allAnimals.map((animal, index) => (
-            <label key={animal}>
+            <div className="form-check">
               <input
+              className="form-check-input"
                 type="checkbox"
                 name={animal}
                 disabled={animalFilterDisabledList[index]}
                 checked={checkedAnimals.includes(animal)}
                 onChange={handleCheckboxChange}
+                id={animal}
               />
+            <label className="form-check-label" for={animal}>
               {animal}
             </label>
+            </div>
           ))}
-          <button onClick={handleResetAnimalFilter}>Reset Animal Filter</button>
+          <button type="button" className="btn btn-secondary" onClick={handleResetAnimalFilter}>Reset</button>
         </div>
       </aside>
       <div className="col-md-9 col-lg-8 col-xl-8 col-xxl-9">
@@ -142,17 +142,18 @@ const App = () => {
 
           {filteredLocations.map((location) => (
             <>
-              <div className="card shadow p-2">
-                <div className="row g-0">
+              <div className="card shadow p-2" >
+                <div className="row g-0" style={{height:"240px"}}>
                   <div className="col-md-3 position-relative" >
-                    <img className="img-fluid" src={location.thumbnail} style={{
+                    <img alt="destination-thumbnail" className="img-fluid" src={location.thumbnail} style={{
                       position: "absolute",
                       top: "0",
                       left: "0",
                       width: "100%",
                       height: "100%", /* Set the height of the image to be equal to the height of the container */
                       objectFit: "cover",
-                      padding: "10px"
+                      padding: "10px",
+                      borderRadius:"23px"
                     }} />
                   </div>
                   <div className="col-md-9 col-lg-9" key={location.location_id} >
@@ -166,9 +167,9 @@ const App = () => {
                           <th scope='col'>Name</th>
                           {selectedMonth === '' ?
                             monthList.map(month =>
-                              <th col-xxl-1 scope='col'>{`${month.slice(0, 3)}`}</th>
+                              <th col-xxl-1 scope='col'>{`${prettyMonth(month)}`}</th>
                             )
-                            : <th scope='col'>{`${selectedMonth.slice(0, 3)}`}</th>
+                            : <th scope='col'>{`${prettyMonth(selectedMonth)}`}</th>
                           }
                         </tr>
                       </thead>
@@ -187,9 +188,9 @@ const App = () => {
                             <th scope="row">{animal.name}</th>
                             {selectedMonth === '' ?
                               monthList.map(month =>
-                                <td><Circle value={animal.monthly_sighting[month]} /></td>
+                                <td className="position-relative"><Circle value={animal.monthly_sighting[month]} /></td>
                               )
-                              : <td><Circle value={animal.monthly_sighting[selectedMonth]} /></td>
+                              : <td className="position-relative"><Circle value={animal.monthly_sighting[selectedMonth]} /></td>
                             }
                           </tbody>
                         ))
