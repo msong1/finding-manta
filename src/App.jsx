@@ -53,15 +53,21 @@ const App = () => {
 
   function Circle({ value }) {
     const circleStyle = {
-      10: {backgroundColor: 'white',
-      border: '1px solid white'},
-      20: {backgroundColor: 'white',
-      border: '1px solid #038cfc'},
-      30: {backgroundColor: '#038cfc',
-        border: '1px solid #038cfc'}
+      10: {
+        backgroundColor: 'white',
+        border: '1px solid white'
+      },
+      20: {
+        backgroundColor: 'white',
+        border: '1px solid #038cfc'
+      },
+      30: {
+        backgroundColor: '#038cfc',
+        border: '1px solid #038cfc'
+      }
     }
 
-    return<div style={{
+    return <div style={{
       height: '8px',
       width: '8px',
       borderRadius: '50%',
@@ -94,12 +100,13 @@ const App = () => {
   // }
 
   return (
-    <div>
-      <div>
-        {monthList.map((month, index) => (
-          <div className="form-check form-check-inline">
+    <div className="row">
+      <aside className="col-md-3 col-l-4 col-xl-4 col-xxl-3">
+        <div>
+          {monthList.map((month, index) => (
+            <div className="form-check form-check-inline">
               <input
-              className="form-check-input"
+                className="form-check-input"
                 type="radio"
                 name="month"
                 value={month}
@@ -107,29 +114,30 @@ const App = () => {
                 onChange={handleMonthChange}
               // disabled={monthFilterDisabledList[index]}
               />
-            <label key={month}>
-              {month}
-            </label>
+              <label key={month}>
+                {month}
+              </label>
             </div>
-        ))}
-        <button type="button" className="btn btn-secondary" onClick={handleResetMonthFilter}>Reset Month Filter</button>
-      </div>
-      <div>
-        {allAnimals.map((animal, index) => (
-          <label key={animal}>
-            <input
-              type="checkbox"
-              name={animal}
-              disabled={animalFilterDisabledList[index]}
-              checked={checkedAnimals.includes(animal)}
-              onChange={handleCheckboxChange}
-            />
-            {animal}
-          </label>
-        ))}
-        <button onClick={handleResetAnimalFilter}>Reset Animal Filter</button>
-      </div>
-      <div>
+          ))}
+          <button type="button" className="btn btn-secondary" onClick={handleResetMonthFilter}>Reset Month Filter</button>
+        </div>
+        <div>
+          {allAnimals.map((animal, index) => (
+            <label key={animal}>
+              <input
+                type="checkbox"
+                name={animal}
+                disabled={animalFilterDisabledList[index]}
+                checked={checkedAnimals.includes(animal)}
+                onChange={handleCheckboxChange}
+              />
+              {animal}
+            </label>
+          ))}
+          <button onClick={handleResetAnimalFilter}>Reset Animal Filter</button>
+        </div>
+      </aside>
+      <div className="col-md-9 col-l-8 col-xl-8 col-xxl-9">
         {filteredLocations.map((location) => (
           <div key={location.location_id}>
             <h2>{location.name}</h2>
