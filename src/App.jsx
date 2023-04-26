@@ -144,16 +144,24 @@ const App = () => {
             <>
               <div className="card shadow p-2">
                 <div className="row g-0">
-                  <div className="col-md-3 position-relative">
-                    <img className="img-fluid" src={location.thumbnail} />
+                  <div className="col-md-3 position-relative" >
+                    <img className="img-fluid" src={location.thumbnail} style={{
+                      position: "absolute",
+                      top: "0",
+                      left: "0",
+                      width: "100%",
+                      height: "100%", /* Set the height of the image to be equal to the height of the container */
+                      objectFit: "cover",
+                      padding: "10px"
+                    }} />
                   </div>
                   <div className="col-md-9 col-lg-9" key={location.location_id} >
-                    <h2>{location.name}</h2>
+                    <h2>{`${location.name}, ${location.country}`}</h2>
                     <table className="table-responsive" style={{  maxHeight:"200px",
     overflowY:"scroll",
     display: "block"
 }}>
-                      <thead>
+                      <thead className="sticky-top" style={{backgroundColor:"white"}}>
                         <tr >
                           <th scope='col'>Name</th>
                           {selectedMonth === '' ?
