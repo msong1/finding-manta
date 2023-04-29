@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
-import { locations } from './sampleData/data.js';
+// import { locations } from './sampleData/data.js';
+import sampleLocations from './sampleData/myArray.json'
 
 const monthList =
   ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"]
 
 const App = () => {
+  const [locations, setLocations] = useState(sampleLocations);
   const [checkedAnimals, setCheckedAnimals] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
 
   const handleCheckboxChange = (event) => {
     const name = event.target.name;
@@ -95,10 +98,27 @@ const App = () => {
     return `${month[0].toUpperCase()+month.slice(1,3)}`
   }
 
+
+  const handleSearch = (e) => {
+    // need to make the live search to wait(to be delayed a bit)
+    const query = e.target.value
+    setLocations([...sampleLocations
+      .filter((location) => location.name.toLowerCase().includes(query.toLowerCase())
+      || location.country.toLowerCase().includes(query.toLowerCase()))
+    ]);
+    // setFriendsList(filteredFriends);
+    setSearchQuery(query);
+  };
+
   return (
     <div className="row p-2">
       <aside className="col-sm-12 col-md-3 col-l-4 col-xl-2 col-xxl-2" style={{minWidth:"210px", maxWidth:"230px"}}>
+        <div className="sticky-top" style={{  maxHeight:"1200px",
+    overflowY:"scroll",
+    display: "block"
+}}>
         <div>
+          <div><input type="text" value={searchQuery} onChange={handleSearch} placeholder="Search..."/></div>
           {monthList.map((month, index) => (
             <div className="form-check form-check-inline">
               <input
@@ -122,12 +142,12 @@ const App = () => {
             <div className="form-check">
               <input
               className="form-check-input"
-                type="checkbox"
-                name={animal}
-                disabled={animalFilterDisabledList[index]}
-                checked={checkedAnimals.includes(animal)}
-                onChange={handleCheckboxChange}
-                id={animal}
+              type="checkbox"
+              name={animal}
+              disabled={animalFilterDisabledList[index]}
+              checked={checkedAnimals.includes(animal)}
+              onChange={handleCheckboxChange}
+              id={animal}
               />
             <label className="form-check-label" for={animal}>
               {animal}
@@ -135,6 +155,7 @@ const App = () => {
             </div>
           ))}
           <button type="button" className="btn btn-secondary" onClick={handleResetAnimalFilter}>Reset</button>
+          </div>
         </div>
       </aside>
       <div className="col-md-9 col-lg-8 col-xl-8 col-xxl-9">
