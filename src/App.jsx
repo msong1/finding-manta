@@ -35,16 +35,14 @@ function App() {
 
   const handleCheckboxChange = (event) => {
     const { name } = event.target;
-    if (checkedAnimals.includes(name)) {
-      setCheckedAnimals(checkedAnimals.filter((checkedAnimal) => checkedAnimal !== name));
-    } else {
-      setCheckedAnimals([...checkedAnimals, name]);
-    }
+    setCheckedAnimals((prevCheckedAnimals) => (prevCheckedAnimals.includes(name)
+      ? prevCheckedAnimals.filter((checkedAnimal) => checkedAnimal !== name)
+      : [...prevCheckedAnimals, name]));
   };
 
   const handleMonthChange = (event) => {
     const month = event.target.value;
-    setSelectedMonth(month === selectedMonth ? '' : month);
+    setSelectedMonth((prevState) => (month === prevState ? '' : month));
   };
 
   const handleResetMonthFilter = () => {
@@ -53,6 +51,7 @@ function App() {
   const handleResetAnimalFilter = () => {
     setCheckedAnimals([]);
   };
+
   const handleSearch = (e) => {
     const query = e.target.value;
     setLocations(
@@ -75,7 +74,8 @@ function App() {
         (animal) => animal.monthly_sighting[selectedMonth] > 10,
       );
       animals = animalListFilteredByMonth.map((animal) => animal.name);
-      sightings = animalListFilteredByMonth.flatMap((animal) => Object.keys(animal.monthly_sighting));
+      sightings = animalListFilteredByMonth
+        .flatMap((animal) => Object.keys(animal.monthly_sighting));
     } else {
       animals = location.animal_list.map((animal) => animal.name);
       sightings = location.animal_list.flatMap((animal) => Object.keys(animal.monthly_sighting));
@@ -89,26 +89,10 @@ function App() {
   const allAnimals = [
     ...new Set(locations.flatMap((location) => location.animal_list.map((animal) => animal.name))),
   ];
-  const animalFilterDisabledList = Array(allAnimals.length).fill(false);
-  allAnimals.forEach((animal, index) => {
-    animalFilterDisabledList[index] = !filteredAnimals.has(animal);
-  });
-
-
-
-  const filteredAnimals = new Set();
-  filteredLocations.forEach((({ animal_list }) => {
-    animal_list.forEach((animal) => {
-      (selectedMonth ? animal.monthly_sighting[selectedMonth] > 10 && filteredAnimals.add(animal.name)
-        : filteredAnimals.add(animal.name));
-    });
-  }));
-
-
-
-
-
-
+  const animalFilterDisabledList = allAnimals
+    .map((animal) => filteredLocations
+      .every((location) => !location.animal_list
+        .some((animalObj) => animalObj.name === animal)));
 
   return (
     <div className="row p-2">
@@ -116,25 +100,32 @@ function App() {
         <div className="sticky-top" style={{ maxHeight: '1200px', overflowY: 'scroll', display: 'block' }}>
           <div>
             <div>
-              <input type="text" value={searchQuery} onChange={handleSearch} placeholder="Search..." /></div>
-            {monthList.map((month, index) => (
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={handleSearch}
+                placeholder="Search..."
+              />
+            </div>
+            {monthList.map((month) => (
               <div className="form-check form-check-inline">
-                <input
-                  className="form-check-input"
-                  type="radio"
-                  name="month"
-                  value={month}
-                  checked={selectedMonth === month}
-                  onChange={handleMonthChange}
-                />
-                <label key={month}>
+                <label htmlFor={month}>
                   {prettyMonth(month)}
+                  <input
+                    id={month}
+                    className="form-check-input"
+                    type="radio"
+                    name="month"
+                    value={month}
+                    checked={selectedMonth === month}
+                    onChange={handleMonthChange}
+                  />
                 </label>
               </div>
             ))}
             <button type="button" className="btn btn-secondary" onClick={handleResetMonthFilter}>
               Reset
-              </button>
+            </button>
           </div>
           <div className="form-check">
             {allAnimals.map((animal, index) => (
@@ -153,13 +144,14 @@ function App() {
                 </label>
               </div>
             ))}
-            <button type="button" className="btn btn-secondary" onClick={handleResetAnimalFilter}>Reset</button>
+            <button type="button" className="btn btn-secondary" onClick={handleResetAnimalFilter}>
+              Reset
+            </button>
           </div>
         </div>
       </aside>
       <div className="col-md-9 col-lg-8 col-xl-8 col-xxl-9">
         <div className="vstack gap-4">
-
           {filteredLocations.map((location) => (
             <div className="card shadow p-2">
               <div className="row g-0" style={{ height: '240px' }}>
@@ -173,7 +165,7 @@ function App() {
                       top: '0',
                       left: '0',
                       width: '100%',
-                      height: '100%', /* Set the height of the image to be equal to the height of the container */
+                      height: '100%',
                       objectFit: 'cover',
                       padding: '10px',
                       borderRadius: '23px',
@@ -182,46 +174,56 @@ function App() {
                 </div>
                 <div className="col-md-9 col-lg-9" key={location.location_id}>
                   <h2>{`${location.name}, ${location.country}`}</h2>
-                  <table
-                    className="table-responsive"
-                    style={{
-                      maxHeight: '200px',
-                      overflowY: 'scroll',
-                      display: 'block',
-                    }}
-                  >
-                    <thead className="sticky-top" style={{ backgroundColor: 'white' }}>
-                      <tr>
-                        <th scope="col">Name</th>
-                        {selectedMonth === ''
-                          ? monthList.map((month) => <th col-xxl-1 scope="col">{`${prettyMonth(month)}`}</th>)
-                          : <th scope="col">{`${prettyMonth(selectedMonth)}`}</th>}
-                      </tr>
-                    </thead>
-                    {/* <div style={{height:'200px', overflowY:'scroll'}}> */}
-                    {location.animal_list
-                      .filter((animal) => {
-                        if (!selectedMonth) {
-                          return true;
-                        }
-                        return animal.monthly_sighting[selectedMonth] > 10;
-                      })
-                      .filter((animal) => checkedAnimals.length === 0 || checkedAnimals.includes(animal.name))
-                      .map((animal) => (
-                        <tbody>
-                          <th scope="row">{animal.name}</th>
+                  <div className="table-responsive" style={{ maxHeight: '200px', overflowY: 'scroll', display: 'block' }}>
+                    <table className="table">
+                      <thead className="sticky-top" style={{ backgroundColor: 'white' }}>
+                        <tr>
+                          <th scope="col">Name</th>
                           {selectedMonth === ''
-                            ? monthList.map((month) => <td className="position-relative"><Circle value={animal.monthly_sighting[month]} /></td>)
-                            : <td className="position-relative"><Circle value={animal.monthly_sighting[selectedMonth]} /></td>}
-                        </tbody>
-                      ))}
-                    {/* </div> */}
-                  </table>
+                            ? monthList.map((month) => (
+                              <th scope="col" key={month}>
+                                {prettyMonth(month)}
+                              </th>
+                            ))
+                            : (
+                              <th scope="col">
+                                {prettyMonth(selectedMonth)}
+                              </th>
+                            )}
+                        </tr>
+                      </thead>
+                      {location.animal_list
+                        .filter((animal) => {
+                          if (!selectedMonth) {
+                            return true;
+                          }
+                          return animal.monthly_sighting[selectedMonth] > 10;
+                        }).filter((animal) => checkedAnimals.length === 0
+                            || checkedAnimals.includes(animal.name))
+                        .map((animal) => (
+                          <tbody key={animal.name}>
+                            <tr>
+                              <th scope="row">{animal.name}</th>
+                              {selectedMonth === ''
+                                ? monthList.map((month) => (
+                                  <td key={month} className="position-relative">
+                                    <Circle value={animal.monthly_sighting[month]} />
+                                  </td>
+                                ))
+                                : (
+                                  <td className="position-relative">
+                                    <Circle value={animal.monthly_sighting[selectedMonth]} />
+                                  </td>
+                                )}
+                            </tr>
+                          </tbody>
+                        ))}
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
           ))}
-
         </div>
       </div>
     </div>
