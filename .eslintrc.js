@@ -20,4 +20,7 @@ module.exports = {
     'react/prop-types': 'off',
     'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
   },
+  settings: {
+    'import/core-modules': ['@firebase/firestore'],
+  },
 };

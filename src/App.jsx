@@ -4,7 +4,7 @@ import FilterAside from './components/FilterAside';
 import Circle from './components/Circle';
 import { monthList, prettyMonth } from './utils';
 
-const { collection, getDocs } = require('firebase/firestore');
+const { collection, getDocs } = require('@firebase/firestore');
 const { db } = require('./firebaseConfig/firebaseConfig');
 
 function App() {
@@ -12,7 +12,6 @@ function App() {
   const [checkedAnimals, setCheckedAnimals] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
-  const [isSuccess, setIsSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
 
@@ -21,13 +20,11 @@ function App() {
     getDocs(dbLocs)
       .then((res) => {
         setLocations(res.docs.map((doc) => doc.data()));
-        setIsSuccess(true);
         setIsLoading(false);
         setIsError(false);
-        console.log('data fetched');
+        // console.log('data fetched');
       })
       .catch((error) => {
-        setIsSuccess(false);
         setIsLoading(false);
         setIsError(true);
         console.error(`Error getting documents: ${error}`);

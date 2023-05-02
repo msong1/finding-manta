@@ -22,11 +22,15 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# firebase privatekey
+# firebase
 /src/firebaseConfig
+.firebase/
+.firebaserc
 #etc
 /etc
 
 # raw data
+/db
 /data
 /src/sampleData/myArray.json
+
