@@ -166,6 +166,19 @@ function App() {
                         >
                           <i className="bi bi-suit-heart" style={{ lineHeight: '16px', marginTop: '1px' }} />
                         </button>
+                        <button
+                          type="button"
+                          className="btn btn-sm btn-light btn-round d-flex align-items-center justify-content-center"
+                          onClick={console.log}
+                          style={{
+                            width: '21px',
+                            height: '21px',
+                            borderRadius: '50%',
+                            textAlign: 'center',
+                          }}
+                        >
+                          <i className="bi bi-share-fill" style={{ lineHeight: '16px', marginTop: '1px' }} />
+                        </button>
 
                         {/* <i className="bi bi-share" onClick={console.log} /> */}
                       </div>
