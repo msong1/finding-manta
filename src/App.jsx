@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-// import sampleLocations from './sampleData/myArray.json';
+import sampleLocations from './sampleData/myArray.json';
 import FilterAside from './components/FilterAside';
 import Circle from './components/Circle';
 import { monthList, prettyMonth } from './utils';
@@ -17,18 +17,25 @@ function App() {
 
   useEffect(() => {
     const dbLocs = collection(db, 'locations');
-    getDocs(dbLocs)
-      .then((res) => {
-        setLocations(res.docs.map((doc) => doc.data()));
-        setIsLoading(false);
-        setIsError(false);
-        // console.log('data fetched');
-      })
-      .catch((error) => {
-        setIsLoading(false);
-        setIsError(true);
-        console.error(`Error getting documents: ${error}`);
-      });
+
+    // // for local dev
+    setLocations(sampleLocations);
+    setIsLoading(false);
+    setIsError(false);
+
+    // // for production
+    // getDocs(dbLocs)
+    //   .then((res) => {
+    //     setLocations(res.docs.map((doc) => doc.data()));
+    //     setIsLoading(false);
+    //     setIsError(false);
+    //     // console.log('data fetched');
+    //   })
+    //   .catch((error) => {
+    //     setIsLoading(false);
+    //     setIsError(true);
+    //     console.error(`Error getting documents: ${error}`);
+    //   });
   }, []);
 
   const handleCheckboxChange = (event) => {
@@ -52,12 +59,6 @@ function App() {
 
   const handleSearch = (e) => {
     const query = e.target.value;
-    // setLocations(
-    //   sampleLocations.filter(
-    //     (location) => location.name.toLowerCase().includes(query.toLowerCase())
-    //       || location.country.toLowerCase().includes(query.toLowerCase()),
-    //   ),
-    // );
     setSearchQuery(query);
   };
 
@@ -80,8 +81,6 @@ function App() {
       sightings = location.animal_list.flatMap((animal) => Object.keys(animal.monthly_sighting));
     }
     return (
-      // checkedAnimals.every((checkedAnimal) => animals.includes(checkedAnimal))
-      //   && (!selectedMonth || sightings.includes(selectedMonth))
       checkedAnimals.every((checkedAnimal) => animals.includes(checkedAnimal))
       && (!selectedMonth || sightings.includes(selectedMonth))
       && (location.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -150,7 +149,33 @@ function App() {
                       />
                     </div>
                     <div className="col-md-7" key={location.location_id}>
-                      <h2>{`${location.name}, ${location.country}`}</h2>
+                      <div className="d-flex justify-content-between align-items-center">
+                        <h2>
+                          {`${location.name}, ${location.country}`}
+                        </h2>
+                        <button
+                          type="button"
+                          className="btn btn-sm btn-light btn-round d-flex align-items-center justify-content-center"
+                          onClick={console.log}
+                          style={{
+                            width: '21px',
+                            height: '21px',
+                            borderRadius: '50%',
+                            textAlign: 'center',
+                          }}
+                        >
+                          <i className="bi bi-suit-heart" style={{ lineHeight: '16px', marginTop: '1px' }} />
+                        </button>
+
+                        {/* <i className="bi bi-share" onClick={console.log} /> */}
+                      </div>
+                      <small>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-geo-alt" viewBox="0 0 16 16">
+                          <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A31.493 31.493 0 0 1 8 14.58a31.481 31.481 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94zM8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10z" />
+                          <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+                        </svg>
+                        COUNTRY, CONTINENT
+                      </small>
                       <div className="table-responsive" style={{ maxHeight: '200px', overflowY: 'scroll', display: 'block' }}>
                         <table className="table">
                           <thead className="sticky-top" style={{ backgroundColor: 'white' }}>

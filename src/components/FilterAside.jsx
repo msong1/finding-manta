@@ -13,7 +13,7 @@ function FilterAside({
   };
 
   return (
-    <div>
+    <div className="sticky-top">
       <button
         className="btn btn-secondary mb-2 d-xl-none"
         type="button"

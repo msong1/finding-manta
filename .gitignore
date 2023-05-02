@@ -34,3 +34,5 @@ yarn-error.log*
 /data
 /src/sampleData/myArray.json
 
+# environment variables
+.env
