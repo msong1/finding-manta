@@ -7,6 +7,9 @@ Finding Manta is a one-stop platform that helps divers find and plan their perfe
 ## Key Features
 
 - Advanced filtering options to browse dive sites based on months, marine life, popularity, and distance
+  1. Animal filter: you can find dive sites with marine life that you want to see
+  2. Month filter: you can see what marine life that you'll see in each dive site
+  3. Location filter: you can search dive sites by name
 
 - Regularly updated database of dive sites and marine life information
 
