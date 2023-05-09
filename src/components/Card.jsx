@@ -28,7 +28,7 @@ export default function Card({
         </div>
         <div className="col-md-9" key={location.location_id}>
           <div className="d-flex justify-content-between align-items-center">
-            <h2>{`${location.name}, ${location.country}`}</h2>
+            <h2>{`${location.name}`}</h2>
             <div className="hstack gap-1">
               <button
                 type="button"
@@ -92,7 +92,7 @@ export default function Card({
                 />
                 <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
               </svg>
-              COUNTRY, CONTINENT
+              {location.country}
             </small>
           </div>
           <ul className="nav nav-divider my-1">
@@ -173,16 +173,16 @@ V32z"
               display: 'block',
             }}
           >
-            <table className="table">
+            <table className="table" style={{ justifyContent: 'flex-start' }}>
               <thead
                 className="sticky-top"
                 style={{ backgroundColor: 'white', zIndex: 1 }}
               >
-                <tr>
+                <tr style={{ justifyContent: 'flex-start' }}>
                   <th scope="col">Name</th>
                   {selectedMonth === '' ? (
                     monthList.map((month) => (
-                      <th scope="col" key={month}>
+                      <th scope="col" key={month} className="px-0">
                         {prettyMonth(month)}
                       </th>
                     ))

@@ -76,7 +76,9 @@ function App() {
         (animal) => animal.monthly_sighting[selectedMonth] > 10,
       );
       animals = animalListFilteredByMonth.map((animal) => animal.name);
-      sightings = animalListFilteredByMonth.flatMap((animal) => Object.keys(animal.monthly_sighting));
+      sightings = animalListFilteredByMonth.flatMap((animal) => (
+        Object.keys(animal.monthly_sighting)
+      ));
     } else {
       animals = location.animal_list.map((animal) => animal.name);
       sightings = location.animal_list.flatMap((animal) => Object.keys(animal.monthly_sighting));
